@@ -1,0 +1,15 @@
+flowchart TD
+
+WH[Compute Warehouses<br/>Ingest • Transform • BI]
+RBAC[RBAC and Security Policies]
+MON[Monitoring and Cost Tracking]
+
+WH --- RAW
+WH --- CORE
+WH --- MART
+
+RBAC --- RAW
+RBAC --- CORE
+RBAC --- MART
+
+MON --- WH
