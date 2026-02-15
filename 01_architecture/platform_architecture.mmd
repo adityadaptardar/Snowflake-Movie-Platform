@@ -1,59 +1,20 @@
 flowchart TD
 
-%% External
 ADLS[Azure Data Lake Storage]
 
-%% Snowflake
-subgraph SF[Snowflake Data Cloud]
+RAW[RAW Layer - Immutable Ingestion]
+STR[Streams - Change Tracking]
+CORE[CORE Layer - Cleaned Data]
+MART[MART Layer - Analytics Models]
 
-    subgraph GOV[Governance and Security]
-        RBAC[RBAC and Access Control]
-        MASK[Masking and Row Policies]
-    end
-
-    subgraph MON[Monitoring and FinOps]
-        COST[Cost Monitoring]
-        SLA[SLA and Freshness Tracking]
-    end
-
-    subgraph WH[Compute Warehouses]
-        ING[WH_INGEST]
-        TRN[WH_TRANSFORM]
-        BIW[WH_BI]
-    end
-
-    subgraph DATA[Data Layers]
-        RAW[RAW Layer - Immutable]
-        STR[Streams - CDC Tracking]
-        CORE[CORE Layer - Standardized]
-        MART[MART Layer - Analytics Models]
-    end
-
-end
-
-%% dbt outside Snowflake but controlling transforms
-DBT[dbt Models and Orchestration]
-
+DBT[dbt Transformations]
 BI[BI and Analytics Tools]
 
-%% Flow
 ADLS --> RAW
 RAW --> STR
 STR --> CORE
 CORE --> MART
 MART --> BI
 
-%% dbt orchestration links
 DBT --> CORE
 DBT --> MART
-
-%% Supporting relationships
-RBAC --- RAW
-RBAC --- CORE
-RBAC --- MART
-MASK --- CORE
-COST --- WH
-SLA --- WH
-WH --- RAW
-WH --- CORE
-WH --- MART
