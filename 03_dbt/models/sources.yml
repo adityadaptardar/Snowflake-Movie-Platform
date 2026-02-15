@@ -2,10 +2,10 @@ version: 2
 
 sources:
   - name: raw
-    database: YOUR_DATABASE
+    database: movies
     schema: raw
     tables:
       - name: raw_users
       - name: raw_movies
       - name: raw_subscriptions
-      - name: raw_view_events
+      - name: v_view_events_parsed
