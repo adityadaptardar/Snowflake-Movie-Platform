@@ -1,15 +1,25 @@
 flowchart TD
 
+%% ===== External =====
 ADLS[Azure Data Lake Storage]
 
-RAW[RAW Layer - Immutable Ingestion]
-STR[Streams - Change Tracking]
-CORE[CORE Layer - Cleaned Data]
-MART[MART Layer - Analytics Models]
+%% ===== Data Platform =====
+subgraph PLATFORM[Snowflake Data Platform]
 
+    RAW[RAW Layer<br/>Immutable Ingestion]
+    STR[Streams<br/>CDC Tracking]
+    CORE[CORE Layer<br/>Standardized Data]
+    MART[MART Layer<br/>Analytics Models]
+
+end
+
+%% ===== Orchestration =====
 DBT[dbt Transformations]
+
+%% ===== Consumers =====
 BI[BI and Analytics Tools]
 
+%% ===== Flow =====
 ADLS --> RAW
 RAW --> STR
 STR --> CORE
@@ -18,3 +28,19 @@ MART --> BI
 
 DBT --> CORE
 DBT --> MART
+
+%% ===== Styling =====
+classDef storage fill:#E3F2FD,stroke:#1E88E5,stroke-width:2;
+classDef raw fill:#E8F5E9,stroke:#43A047,stroke-width:2;
+classDef core fill:#FFF3E0,stroke:#FB8C00,stroke-width:2;
+classDef mart fill:#F3E5F5,stroke:#8E24AA,stroke-width:2;
+classDef orch fill:#E0F7FA,stroke:#00838F,stroke-width:2;
+classDef consumer fill:#FCE4EC,stroke:#D81B60,stroke-width:2;
+
+class ADLS storage;
+class RAW raw;
+class STR raw;
+class CORE core;
+class MART mart;
+class DBT orch;
+class BI consumer;
