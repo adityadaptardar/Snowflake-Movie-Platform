@@ -4,20 +4,19 @@
 ) }}
 
 SELECT
-    event_id,
-    user_id,
-    movie_id,
-    watch_start_time,
-    watch_duration_minutes,
-    device_type,
-    rating,
-    ingestion_ts
-FROM {{ source('raw','v_view_events_parsed') }}
+    s.event_id,
+    s.user_id,
+    s.movie_id,
+    s.watch_start_time,
+    s.watch_duration_minutes,
+    s.device_type,
+    s.rating,
+    s.ingestion_ts
+FROM {{ source('raw','v_view_events_parsed') }} s
 
 {% if is_incremental() %}
 
--- Only process new events
-WHERE ingestion_ts > (
+WHERE s.ingestion_ts > (
     SELECT COALESCE(MAX(ingestion_ts), '1900-01-01')
     FROM {{ this }}
 )
