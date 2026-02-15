@@ -1,9 +1,9 @@
 flowchart TD
 
-%% ===== External =====
+%% External
 ADLS[Azure Data Lake Storage]
 
-%% ===== Snowflake =====
+%% Snowflake
 subgraph SF[Snowflake Data Cloud]
 
     subgraph GOV[Governance and Security]
@@ -25,24 +25,29 @@ subgraph SF[Snowflake Data Cloud]
     subgraph DATA[Data Layers]
         RAW[RAW Layer - Immutable]
         STR[Streams - CDC Tracking]
-        ORCH[Tasks or dbt Pipelines]
         CORE[CORE Layer - Standardized]
         MART[MART Layer - Analytics Models]
     end
 
 end
 
+%% dbt outside Snowflake but controlling transforms
+DBT[dbt Models and Orchestration]
+
 BI[BI and Analytics Tools]
 
-%% ===== Flow =====
+%% Flow
 ADLS --> RAW
 RAW --> STR
-STR --> ORCH
-ORCH --> CORE
+STR --> CORE
 CORE --> MART
 MART --> BI
 
-%% ===== Supporting links =====
+%% dbt orchestration links
+DBT --> CORE
+DBT --> MART
+
+%% Supporting relationships
 RBAC --- RAW
 RBAC --- CORE
 RBAC --- MART
@@ -52,16 +57,3 @@ SLA --- WH
 WH --- RAW
 WH --- CORE
 WH --- MART
-
-%% ===== Styling =====
-classDef external fill:#E3F2FD,stroke:#1E88E5,stroke-width:2;
-classDef layer fill:#E8F5E9,stroke:#43A047,stroke-width:2;
-classDef compute fill:#E8EAF6,stroke:#3949AB,stroke-width:2;
-classDef governance fill:#FCE4EC,stroke:#D81B60,stroke-width:2;
-classDef monitor fill:#FFF3E0,stroke:#FB8C00,stroke-width:2;
-
-class ADLS external;
-class RAW,STR,ORCH,CORE,MART layer;
-class ING,TRN,BIW compute;
-class RBAC,MASK governance;
-class COST,SLA monitor;
