@@ -1,24 +1,22 @@
 flowchart LR
 
-    %% External
     ADLS[Azure ADLS Storage]
 
-    %% Snowflake boundary
     subgraph Snowflake_Data_Cloud
 
-        GOV[Governance & Security<br/>RBAC • Masking • Row Access • Secure Views]
-        MON[Monitoring & FinOps<br/>Cost • SLA • Freshness • Performance]
-        WH[Compute Warehouses<br/>WH_INGEST | WH_TRANSFORM | WH_BI]
+        GOV[Governance and Security]
+        MON[Monitoring and FinOps]
+        WH[Compute Warehouses]
 
-        RAW[RAW Layer<br/>Immutable ingestion]
-        STR[Streams<br/>CDC Tracking]
-        ORCH[Tasks / dbt Orchestration]
-        CORE[CORE Layer<br/>Cleaned & Conformed]
-        MART[MART Layer<br/>Dimensional Models]
+        RAW[RAW Layer Immutable Ingestion]
+        STR[Streams CDC Tracking]
+        ORCH[Tasks and dbt Orchestration]
+        CORE[CORE Layer Cleaned Data]
+        MART[MART Layer Dimensional Models]
 
     end
 
-    BI[BI / Analytics Tools]
+    BI[BI and Analytics Tools]
 
     ADLS --> RAW
     RAW --> STR
