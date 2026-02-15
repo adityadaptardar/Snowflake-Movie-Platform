@@ -98,6 +98,16 @@ ON SCHEMA MOVIES.MART TO ROLE DATA_ENGINEER;
 GRANT CREATE SCHEMA ON DATABASE MOVIES TO ROLE DATA_ENGINEER;
 
 
+---for core 
+
+grant usage on schema raw to role data_engineer;
+grant select on all tables in schema raw to role data_engineer;
+grant select on future tables in schema raw to role data_engineer;
+
+grant select on all views in schema raw to role data_engineer;
+grant select on future views in schema raw to role data_engineer;
+
+
 -- =====================================================
 -- ANALYST ACCESS (CURRENT + FUTURE OBJECTS)
 -- =====================================================
@@ -132,5 +142,14 @@ GRANT ROLE PLATFORM_ADMIN TO USER ADIGOTCERTIFIED;
 --GRANT ROLE DATA_ENGINEER TO USER <your_user>;
 
 -- USE ROLE PLATFORM_ADMIN;
+
+CREATE USER dbt_user
+PASSWORD = 'StrongPassword123!'
+DEFAULT_ROLE = dbt_role
+DEFAULT_WAREHOUSE = transform_wh
+DEFAULT_NAMESPACE = your_db.core
+MUST_CHANGE_PASSWORD = FALSE;
+
+GRANT ROLE dbt_role TO USER dbt_user;
 
 
