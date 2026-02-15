@@ -1,0 +1,47 @@
+```mermaid
+flowchart LR
+
+    %% External
+    ADLS[Azure ADLS Storage]
+
+    %% Snowflake boundary
+    subgraph Snowflake Data Cloud
+
+        %% Governance
+        GOV[Governance & Security<br/>RBAC • Masking • Row Access • Secure Views]
+
+        %% Monitoring
+        MON[Monitoring & FinOps<br/>Cost • SLA • Freshness • Performance]
+
+        %% Warehouses
+        WH[Compute Warehouses<br/>WH_INGEST | WH_TRANSFORM | WH_BI]
+
+        %% Data layers
+        RAW[RAW Layer<br/>Immutable ingestion]
+        STR[Streams<br/>CDC Tracking]
+        ORCH[Tasks / dbt Orchestration]
+        CORE[CORE Layer<br/>Cleaned & Conformed]
+        MART[MART Layer<br/>Dimensional Models]
+
+    end
+
+    %% Consumers
+    BI[BI / Analytics Tools]
+
+    %% Flow
+    ADLS --> RAW
+    RAW --> STR
+    STR --> ORCH
+    ORCH --> CORE
+    CORE --> MART
+    MART --> BI
+
+    %% Supporting links
+    GOV --- RAW
+    GOV --- CORE
+    GOV --- MART
+    MON --- WH
+    WH --- RAW
+    WH --- CORE
+    WH --- MART
+```
