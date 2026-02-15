@@ -1,15 +1,46 @@
 flowchart TD
 
-WH[Compute Warehouses<br/>Ingest • Transform • BI]
-RBAC[RBAC and Security Policies]
-MON[Monitoring and Cost Tracking]
+%% ===== Core Platform =====
+subgraph PLATFORM[Snowflake Platform Capabilities]
 
-WH --- RAW
-WH --- CORE
-WH --- MART
+    subgraph COMPUTE[Compute Isolation]
+        WH1[WH_INGEST]
+        WH2[WH_TRANSFORM]
+        WH3[WH_BI]
+    end
 
-RBAC --- RAW
-RBAC --- CORE
-RBAC --- MART
+    subgraph SECURITY[Governance and Security]
+        RBAC[RBAC Roles]
+        MASK[Masking Policies]
+        ROW[Row Access Policies]
+        SECURE[Secure Views]
+    end
 
-MON --- WH
+    subgraph OBS[Observability and FinOps]
+        COST[Warehouse Cost Tracking]
+        PERF[Query Performance Monitoring]
+        SLA[Pipeline SLA and Freshness]
+    end
+
+end
+
+%% ===== Supporting relationships =====
+WH1 --- COST
+WH2 --- COST
+WH3 --- COST
+
+RBAC --- WH1
+RBAC --- WH2
+RBAC --- WH3
+
+PERF --- WH2
+SLA --- WH2
+
+%% ===== Styling =====
+classDef compute fill:#E8EAF6,stroke:#3949AB,stroke-width:2;
+classDef security fill:#FCE4EC,stroke:#D81B60,stroke-width:2;
+classDef observability fill:#FFF3E0,stroke:#FB8C00,stroke-width:2;
+
+class WH1,WH2,WH3 compute;
+class RBAC,MASK,ROW,SECURE security;
+class COST,PERF,SLA observability;
