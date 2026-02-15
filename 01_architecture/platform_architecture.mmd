@@ -1,4 +1,4 @@
-flowchart LR
+flowchart TD
 
 %% ===== External =====
 ADLS[Azure Data Lake Storage]
@@ -24,7 +24,7 @@ subgraph SF[Snowflake Data Cloud]
 
     subgraph DATA[Data Layers]
         RAW[RAW Layer - Immutable]
-        STR[Streams - CDC]
+        STR[Streams - CDC Tracking]
         ORCH[Tasks or dbt Pipelines]
         CORE[CORE Layer - Standardized]
         MART[MART Layer - Analytics Models]
@@ -46,6 +46,7 @@ MART --> BI
 RBAC --- RAW
 RBAC --- CORE
 RBAC --- MART
+MASK --- CORE
 COST --- WH
 SLA --- WH
 WH --- RAW
