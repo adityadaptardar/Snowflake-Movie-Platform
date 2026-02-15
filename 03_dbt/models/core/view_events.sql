@@ -1,30 +1,7 @@
 {{ config(
     materialized='incremental',
-    unique_key='event_id',
-    schema='mart'
+    unique_key='event_id'
 ) }}
-
-WITH source_data AS (
-
-    SELECT
-        event_id,
-        user_id,
-        movie_id,
-        watch_start_time,
-        watch_duration_minutes,
-        device_type,
-        rating,
-        ingestion_ts
-    FROM {{ ref('view_events') }}
-
-),
-
-max_loaded AS (
-
-    SELECT COALESCE(MAX(ingestion_ts),'1900-01-01') AS max_ts
-    FROM {{ this }}
-
-)
 
 SELECT
     s.event_id,
@@ -35,11 +12,13 @@ SELECT
     s.device_type,
     s.rating,
     s.ingestion_ts
-FROM source_data s
+FROM {{ source('raw','v_view_events_parsed') }} s
 
 {% if is_incremental() %}
 
-JOIN max_loaded m
-  ON s.ingestion_ts > m.max_ts
+WHERE s.ingestion_ts > (
+    SELECT COALESCE(MAX(ingestion_ts), '1900-01-01')
+    FROM {{ this }}
+)
 
 {% endif %}
