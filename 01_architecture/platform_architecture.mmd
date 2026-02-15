@@ -1,34 +1,66 @@
 flowchart LR
 
-    ADLS[Azure ADLS Storage]
+%% ===== External =====
+ADLS[Azure Data Lake Storage]
 
-    subgraph Snowflake_Data_Cloud
+%% ===== Snowflake =====
+subgraph SF[Snowflake Data Cloud]
 
-        GOV[Governance and Security]
-        MON[Monitoring and FinOps]
-        WH[Compute Warehouses]
-
-        RAW[RAW Layer Immutable Ingestion]
-        STR[Streams CDC Tracking]
-        ORCH[Tasks and dbt Orchestration]
-        CORE[CORE Layer Cleaned Data]
-        MART[MART Layer Dimensional Models]
-
+    subgraph GOV[Governance and Security]
+        RBAC[RBAC and Access Control]
+        MASK[Masking and Row Policies]
     end
 
-    BI[BI and Analytics Tools]
+    subgraph MON[Monitoring and FinOps]
+        COST[Cost Monitoring]
+        SLA[SLA and Freshness Tracking]
+    end
 
-    ADLS --> RAW
-    RAW --> STR
-    STR --> ORCH
-    ORCH --> CORE
-    CORE --> MART
-    MART --> BI
+    subgraph WH[Compute Warehouses]
+        ING[WH_INGEST]
+        TRN[WH_TRANSFORM]
+        BIW[WH_BI]
+    end
 
-    GOV --- RAW
-    GOV --- CORE
-    GOV --- MART
-    MON --- WH
-    WH --- RAW
-    WH --- CORE
-    WH --- MART
+    subgraph DATA[Data Layers]
+        RAW[RAW Layer - Immutable]
+        STR[Streams - CDC]
+        ORCH[Tasks or dbt Pipelines]
+        CORE[CORE Layer - Standardized]
+        MART[MART Layer - Analytics Models]
+    end
+
+end
+
+BI[BI and Analytics Tools]
+
+%% ===== Flow =====
+ADLS --> RAW
+RAW --> STR
+STR --> ORCH
+ORCH --> CORE
+CORE --> MART
+MART --> BI
+
+%% ===== Supporting links =====
+RBAC --- RAW
+RBAC --- CORE
+RBAC --- MART
+COST --- WH
+SLA --- WH
+WH --- RAW
+WH --- CORE
+WH --- MART
+
+%% ===== Styling =====
+classDef external fill:#E3F2FD,stroke:#1E88E5,stroke-width:2;
+classDef layer fill:#E8F5E9,stroke:#43A047,stroke-width:2;
+classDef compute fill:#E8EAF6,stroke:#3949AB,stroke-width:2;
+classDef governance fill:#FCE4EC,stroke:#D81B60,stroke-width:2;
+classDef monitor fill:#FFF3E0,stroke:#FB8C00,stroke-width:2;
+
+class ADLS external;
+class RAW,STR,ORCH,CORE,MART layer;
+class ING,TRN,BIW compute;
+class RBAC,MASK governance;
+class COST,SLA monitor;
