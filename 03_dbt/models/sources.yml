@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: raw
+    database: movies
+    schema: raw
+    tables:
+      - name: raw_users
+      - name: raw_movies
+      - name: raw_subscriptions
+      - name: v_view_events_parsed
